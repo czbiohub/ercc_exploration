@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# MY STUFF
+*.vcf
+VCF.py
+*.fastq
+*.bam
+*.sam
+*.bai
+*.gtf
+

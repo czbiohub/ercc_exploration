@@ -111,4 +111,5 @@ VCF.py
 *.sam
 *.bai
 *.gtf
+*_ercc_out.txt
 

@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import csv
 import re
+from statistics import mean 
 
 def split_at_upper_case(text):
     """ splits a given string AFTER each upper case letter """
@@ -19,6 +20,7 @@ def split_at_upper_case(text):
 
 def get_substitution_rate(ercc_alignment_file):
     """ returns the base substitution rate in a given ERCC only alignement file """
+    print('getting ERCC substitution rates')
 
     cwd = os.getcwd()
     currFile = cwd + '/ercc_out/' + ercc_alignment_file
@@ -50,6 +52,8 @@ def get_substitution_rate(ercc_alignment_file):
 def generate_ercc_only_bams(ercc_l_):
     """ filters bams for ONLY the ERCC entries
         outputs a new set of filtered bams """
+    print('generating ERCC only .bams')
+    
     cwd = os.getcwd()
     cell_names = os.listdir('cells/')
 
@@ -92,6 +96,10 @@ for item in ercc_only_alignment_files:
     currRate = get_substitution_rate(item)
     sub_rates.append(currRate)
 
-print(sub_rates)
+sub_rate_mean = mean(sub_rates)
+
+print(' ')
+print('The mean base substitution rate among ERCCs is: %d' % sub_rates_mean)
+print(' ')
 
 

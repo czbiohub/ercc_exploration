@@ -112,4 +112,8 @@ VCF.py
 *.bai
 *.gtf
 *_ercc_out.txt
+epiCellsAll/
+PD_tumor
+PER_tumor
+TN_tumor
 

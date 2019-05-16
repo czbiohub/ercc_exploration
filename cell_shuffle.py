@@ -13,14 +13,14 @@ pr_cells = list(pr_cells['cell_id'])
 
 for cell in epiCellsAll:
     if cell in naive_cells:
-        cmd = 'cp epiCellsAll/' + cell + '/ ' + 'TN_tumor/ --recursive'
+        cmd = 'cp -r epiCellsAll/' + cell + '/ ' + 'TN_tumor/'
         #print(cmd)
         os.system(cmd)
     elif cell in pd_cells:
-        cmd = 'cp epiCellsAll/' + cell + '/ ' + 'PD_tumor/ --recursive'
+        cmd = 'cp -r epiCellsAll/' + cell + '/ ' + 'PD_tumor/'
         #print(cmd)
         os.system(cmd)
     elif cell in pr_cells:
-        cmd = 'cp epiCellsAll/' + cell + '/ ' + 'PER_tumor/ --recursive'
+        cmd = 'cp -r epiCellsAll/' + cell + '/ ' + 'PER_tumor/'
         #print(cmd)
         os.system(cmd)

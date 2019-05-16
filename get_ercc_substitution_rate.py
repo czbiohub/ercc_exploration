@@ -19,11 +19,44 @@ def split_at_upper_case(text):
 
 
 
+def generate_ercc_only_bams(ercc_l_):
+    """ filters bams for ONLY the ERCC entries
+        outputs a new set of filtered bams """
+    print('generating ERCC only .bams...')
+
+    cwd = os.getcwd()
+    cell_names = os.listdir('TN_tumor/')
+
+    for cell in cell_names:
+        currCell = cwd + '/TN_tumor/' + cell
+        bamFile = currCell + '/' + '*.bam'
+        cell_ercc_out = cwd + '/TN_tumor_ercc_only/' + cell + '_ercc_only.txt'
+
+        for ercc in ercc_l_:
+            cmd = 'samtools view ' + bamFile + ' ' + str(ercc) + ' >> ' + cell_ercc_out
+            #print(cmd)
+            os.system(cmd)
+
+
+
+def get_ercc_list():
+    """ gets a list of the ERCCs in the hg38-plus reference"""
+    ercc_list = []
+    with open('hg38-plus.gtf') as hg_file:
+        read_hg = csv.reader(hg_file, delimiter='\t')
+        for row in read_hg:
+            if 'ERCC' in row:
+                ercc_list.append(row[0])
+
+    return(ercc_list)
+
+
+
 def get_substitution_rate(ercc_alignment_file):
     """ returns the base substitution rate in a given ERCC only alignement file """
 
     cwd = os.getcwd()
-    currFile = cwd + '/PD_tumor_ercc_only/' + ercc_alignment_file
+    currFile = cwd + '/TN_tumor_ercc_only/' + ercc_alignment_file
     numLines = 0
     subCount = 0 
 
@@ -49,58 +82,24 @@ def get_substitution_rate(ercc_alignment_file):
 
 
 
-def generate_ercc_only_bams(ercc_l_):
-    """ filters bams for ONLY the ERCC entries
-        outputs a new set of filtered bams """
-    print('generating ERCC only .bams...')
-
-    cwd = os.getcwd()
-    cell_names = os.listdir('PD_tumor/')
-
-    for cell in cell_names:
-        currCell = cwd + '/PD_tumor/' + cell
-        bamFile = currCell + '/' + '*.bam'
-        cell_ercc_out = cwd + '/PD_tumor_ercc_only/' + cell + '_ercc_only.txt'
-
-        for ercc in ercc_l_:
-            cmd = 'samtools view ' + bamFile + ' ' + str(ercc) + ' >> ' + cell_ercc_out
-            #print(cmd)
-            os.system(cmd)
-
-
-
-def get_ercc_list():
-    """ gets a list of the ERCCs in the hg38-plus reference"""
-    ercc_list = []
-    with open('hg38-plus.gtf') as hg_file:
-        read_hg = csv.reader(hg_file, delimiter='\t')
-        for row in read_hg:
-            if 'ERCC' in row:
-                ercc_list.append(row[0])
-
-    return(ercc_list)
-
-
-
 """ main body here"""
 ercc_l = get_ercc_list()
-#generate_ercc_only_bams(ercc_l)
+generate_ercc_only_bams(ercc_l)
 
-cmd = 'find ./PD_tumor_ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
+cmd = 'find ./TN_tumor_ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
 os.system(cmd)
 
 print('getting ERCC substitution rates...')
 
-ercc_only_alignment_files = os.listdir('PD_tumor_ercc_only/')
+ercc_only_alignment_files = os.listdir('TN_tumor_ercc_only/')
 sub_rates = []
 
 for item in ercc_only_alignment_files:
     currRate = get_substitution_rate(item)
     sub_rates.append(currRate)
 
-print(sub_rates)
 sub_rates_sr = pd.Series(sub_rates)
-sub_rates_sr.to_csv('sub_rates.csv', index=False)
+sub_rates_sr.to_csv('sub_rates_TN.csv', index=False)
 
 sub_rate_mean = np.mean(sub_rates)
 sub_rate_med = np.median(sub_rates)

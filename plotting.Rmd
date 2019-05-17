@@ -1,0 +1,32 @@
+---
+title: "plotting"
+author: "Lincoln"
+date: "5/17/2019"
+output: html_document
+---
+
+```{r}
+setwd('/Users/lincoln.harris/code/ercc_exploration/')
+```
+
+read in
+```{r}
+sub_rates_TN <- read.csv('sub_rates_TN.csv', header = FALSE)
+sub_rates_PER <- read.csv('sub_rates_PER.csv', header = FALSE)
+sub_rates_PD <- read.csv('sub_rates_PD.csv', header = FALSE)
+```
+
+create one dataframe, to rule them all 
+```{r}
+df <- data.frame(matrix(ncol = 3, nrow = 1228))
+names(df)[1] <- "TN_sub_rate"
+names(df)[2] <- "PER_sub_rate"
+names(df)[3] <- "PD_sub_rate"
+```
+
+plot
+```{r}
+p <- ggplot(ToothGrowth, aes(x=dose, y=len)) + geom_boxplot()
+p
+```
+

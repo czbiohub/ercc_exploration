@@ -5,6 +5,14 @@ date: "5/17/2019"
 output: html_document
 ---
 
+man this is bad
+```{r}
+#install.packages("berryFunctions")
+library(berryFunctions)
+library(ggplot2)
+library(reshape2)
+```
+
 ```{r}
 setwd('/Users/lincoln.harris/code/ercc_exploration/')
 ```
@@ -16,6 +24,13 @@ sub_rates_PER <- read.csv('sub_rates_PER.csv', header = FALSE)
 sub_rates_PD <- read.csv('sub_rates_PD.csv', header = FALSE)
 ```
 
+make everything the same size
+(thanks berry)
+```{r}
+sub_rates_TN <- insertRows(sub_rates_TN, c(846,1227), new = NA)
+sub_rates_PER <- insertRows(sub_rates_PER, c(286,1227), new = NA)
+```
+
 create one dataframe, to rule them all 
 ```{r}
 df <- data.frame(matrix(ncol = 3, nrow = 1228))
@@ -24,9 +39,21 @@ names(df)[2] <- "PER_sub_rate"
 names(df)[3] <- "PD_sub_rate"
 ```
 
+fill in this big boi
+```{r}
+df$TN_sub_rate <- sub_rates_TN$V1
+df$PER_sub_rate <- sub_rates_PER$V1
+df$PD_sub_rate <- sub_rates_PD$V1
+```
+
+have to melt it...bc of course you do
+```{r}
+df.melt <- melt(df)
+```
+
 plot
 ```{r}
-p <- ggplot(ToothGrowth, aes(x=dose, y=len)) + geom_boxplot()
+p <- ggplot(df.melt, aes(x = variable, y=value)) + geom_boxplot(outlier.shape = NA)
 p
 ```
 

@@ -29,16 +29,47 @@ sub_rates_PD$group <- 'PD'
 
 combine
 ```{r}
-big_df <- rbind(sub_rates_TN, sub_rates_PER, sub_rates_PD)
+big_df <- rbind(sub_rates_PD, sub_rates_PER, sub_rates_TN)
 ```
 
-plot
+basic plot
 ```{r}
-p0 <- ggplot(big_df, aes(x=group, y=V1)) + geom_boxplot()
+p0 <- ggplot(big_df, aes(x=group, y=V1, fill=group)) + geom_boxplot() 
 p0
 ```
 
+log scale
 ```{r}
 p1 <- ggplot(big_df, aes(x=group, y=V1)) + geom_boxplot() + scale_y_log10()
 p1
 ```
+
+remove outliers, then plot
+```{r}
+# compute lower and upper whiskers
+ylim1 = boxplot.stats(big_df$V1)$stats[c(1, 5)]
+
+# scale y limits based on ylim1
+p1 = p0 + coord_cartesian(ylim = ylim1*1.05)
+p1 + labs(x='treatment status', y='base substitution rate') 
+```
+
+add in points
+```{r}
+p1 + labs(x='treatment status', y='base substitution rate') +
+  geom_point(position = 'jitter', alpha = 1/10)
+```
+
+can i fix the ordering here? 
+```{r}
+big_df$group <- factor(big_df$group,
+    levels = c('TN','PER','PD'),ordered = TRUE)
+```
+
+yes!
+```{r}
+p2 <- ggplot(big_df, aes(x=group, y=V1, fill=group)) + geom_boxplot() 
+p3 = p2 + coord_cartesian(ylim = ylim1*1.05)
+p3 + labs(x='treatment status', y='base substitution rate') 
+```
+

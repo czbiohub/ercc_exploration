@@ -1,0 +1,44 @@
+---
+title: "plotting_adv"
+author: "Lincoln"
+date: "5/20/2019"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(reshape2)
+```
+
+```{r}
+setwd('/Users/lincoln.harris/code/ercc_exploration/')
+```
+
+read in
+```{r}
+sub_rates_TN <- read.csv('sub_rates_TN.csv', header = FALSE)
+sub_rates_PER <- read.csv('sub_rates_PER.csv', header = FALSE)
+sub_rates_PD <- read.csv('sub_rates_PD.csv', header = FALSE)
+```
+
+```{r}
+sub_rates_TN$group <- 'TN'
+sub_rates_PER$group <- 'PER'
+sub_rates_PD$group <- 'PD'
+```
+
+combine
+```{r}
+big_df <- rbind(sub_rates_TN, sub_rates_PER, sub_rates_PD)
+```
+
+plot
+```{r}
+p0 <- ggplot(big_df, aes(x=group, y=V1)) + geom_boxplot()
+p0
+```
+
+```{r}
+p1 <- ggplot(big_df, aes(x=group, y=V1)) + geom_boxplot() + scale_y_log10()
+p1
+```

@@ -92,7 +92,7 @@ os.system(mk_dir_cmd)
 ercc_l = get_ercc_list()
 generate_ercc_only_bams(ercc_l, bam_path)
 
-cmd = 'find ./non_immune_bams_copy_ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
+cmd = 'find ./ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
 os.system(cmd)
 
 print('getting ERCC substitution rates...')

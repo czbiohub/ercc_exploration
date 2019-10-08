@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import csv
 import re
+import sys
 import numpy as np
 
 
@@ -19,18 +20,18 @@ def split_at_upper_case(text):
 
 
 
-def generate_ercc_only_bams(ercc_l_):
+def generate_ercc_only_bams(ercc_l_, path):
     """ filters bams for ONLY the ERCC entries
         outputs a new set of filtered bams """
     print('generating ERCC only .bams...')
 
     cwd = os.getcwd()
-    cell_names = os.listdir('test_cells/')
+    cell_names = os.listdir(path)
 
     for cell in cell_names:
-        currCell = cwd + '/test_cells/' + cell
+        currCell = cwd + '/' + path + cell
         bamFile = currCell + '/' + '*.bam'
-        cell_ercc_out = cwd + '/test_cells_ercc_only/' + cell + '_ercc_only.txt'
+        cell_ercc_out = cwd + '/ercc_only/' + cell + '_ercc_only.txt'
 
         for ercc in ercc_l_:
             cmd = 'samtools view ' + bamFile + ' ' + str(ercc) + ' >> ' + cell_ercc_out
@@ -56,7 +57,7 @@ def get_substitution_rate(ercc_alignment_file):
     """ returns the base substitution rate in a given ERCC only alignement file """
 
     cwd = os.getcwd()
-    currFile = cwd + '/test_cells_ercc_only/' + ercc_alignment_file
+    currFile = cwd + '/ercc_only/' + ercc_alignment_file
     numLines = 0
     subCount = 0 
 
@@ -83,15 +84,20 @@ def get_substitution_rate(ercc_alignment_file):
 
 
 """ main body here"""
-ercc_l = get_ercc_list()
-generate_ercc_only_bams(ercc_l)
+bam_path = sys.argv[1]
+mk_dir_cmd = 'mkdir -p ercc_only'
+os.system(mk_dir_cmd)
 
-cmd = 'find ./test_cells_ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
+
+ercc_l = get_ercc_list()
+generate_ercc_only_bams(ercc_l, bam_path)
+
+cmd = 'find ./non_immune_bams_copy_ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
 os.system(cmd)
 
 print('getting ERCC substitution rates...')
 
-ercc_only_alignment_files = os.listdir('test_cells_ercc_only/')
+ercc_only_alignment_files = os.listdir('ercc_only/')
 sub_rates = []
 
 for item in ercc_only_alignment_files:

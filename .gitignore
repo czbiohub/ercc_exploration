@@ -111,6 +111,7 @@ VCF.py
 *.sam
 *.bai
 *.gtf
+*.pdf
 *_ercc_out.txt
 epiCellsAll/
 PD_tumor
@@ -119,4 +120,7 @@ TN_tumor
 PD_tumor_ercc_only
 PER_tumor_ercc_only
 TN_tumor_ercc_only
+
+.Rhistory
+
 

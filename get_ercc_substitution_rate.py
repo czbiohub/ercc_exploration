@@ -25,12 +25,12 @@ def generate_ercc_only_bams(ercc_l_):
     print('generating ERCC only .bams...')
 
     cwd = os.getcwd()
-    cell_names = os.listdir('TN_tumor/')
+    cell_names = os.listdir('test_cells/')
 
     for cell in cell_names:
-        currCell = cwd + '/TN_tumor/' + cell
+        currCell = cwd + '/test_cells/' + cell
         bamFile = currCell + '/' + '*.bam'
-        cell_ercc_out = cwd + '/TN_tumor_ercc_only/' + cell + '_ercc_only.txt'
+        cell_ercc_out = cwd + '/test_cells_ercc_only/' + cell + '_ercc_only.txt'
 
         for ercc in ercc_l_:
             cmd = 'samtools view ' + bamFile + ' ' + str(ercc) + ' >> ' + cell_ercc_out
@@ -56,7 +56,7 @@ def get_substitution_rate(ercc_alignment_file):
     """ returns the base substitution rate in a given ERCC only alignement file """
 
     cwd = os.getcwd()
-    currFile = cwd + '/TN_tumor_ercc_only/' + ercc_alignment_file
+    currFile = cwd + '/test_cells_ercc_only/' + ercc_alignment_file
     numLines = 0
     subCount = 0 
 
@@ -86,12 +86,12 @@ def get_substitution_rate(ercc_alignment_file):
 ercc_l = get_ercc_list()
 generate_ercc_only_bams(ercc_l)
 
-cmd = 'find ./TN_tumor_ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
+cmd = 'find ./test_cells_ercc_only -size  0 -print0 |xargs -0 rm --' # remove empty files
 os.system(cmd)
 
 print('getting ERCC substitution rates...')
 
-ercc_only_alignment_files = os.listdir('TN_tumor_ercc_only/')
+ercc_only_alignment_files = os.listdir('test_cells_ercc_only/')
 sub_rates = []
 
 for item in ercc_only_alignment_files:
@@ -99,7 +99,7 @@ for item in ercc_only_alignment_files:
     sub_rates.append(currRate)
 
 sub_rates_sr = pd.Series(sub_rates)
-sub_rates_sr.to_csv('sub_rates_TN.csv', index=False)
+sub_rates_sr.to_csv('sub_rates_test.csv', index=False, header=False)
 
 sub_rate_mean = np.mean(sub_rates)
 sub_rate_med = np.median(sub_rates)

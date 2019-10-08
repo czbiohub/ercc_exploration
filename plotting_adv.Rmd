@@ -73,3 +73,39 @@ p3 = p2 + coord_cartesian(ylim = ylim1*1.05)
 p3 + labs(x='treatment status', y='base substitution rate') 
 ```
 
+```{r}
+pdf('ercc_distro_noOutliers.pdf', width = 10, height = 10)
+p3 + labs(x='treatment status', y='base substitution rate') 
+dev.off()
+```
+
+can i add sig tests?
+
+```{r}
+#install.packages('ggpubr')
+library(ggpubr)
+```
+
+```{r}
+my_comparisons = list( c("TN", "PER"), c("PER", "PD"), c("TN", "PD") )
+
+#ggboxplot(ToothGrowth, x = "dose", y = "len",
+#          color = "dose", palette = "jco")+ 
+#  stat_compare_means(comparisons = my_comparisons, label.y = c(29, 35, 40))+
+#  stat_compare_means(label.y = 45)
+
+p3 + labs(x='treatment status', y='base substitution rate') +
+  stat_compare_means(comparisons = my_comparisons, label = 'p.format', method = "t.test")
+```
+
+```{r}
+test <- pairwise.wilcox.test(x = big_df$V1, g = big_df$group)
+test <- as.data.frame(test$p.value)
+```
+
+```{r}
+p3 + ggsignif::geom_signif(comparisons = list(c("PD", "PER")), map_signif_level=TRUE, annotations = '0.002063192') + 
+  ggsignif::geom_signif(comparisons = list(c("PD", "TN")), map_signif_level=TRUE, annotations = '5.940442e-23') + 
+  ggsignif::geom_signif(comparisons = list(c("PER", "TN")), map_signif_level=TRUE, annotations = '2.063192e-03')
+```
+

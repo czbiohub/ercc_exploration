@@ -102,6 +102,7 @@ sub_rates = []
 
 for item in ercc_only_alignment_files:
     currRate = get_substitution_rate(item)
+    print(currRate)
     sub_rates.append(currRate)
 
 sub_rates_sr = pd.Series(sub_rates)
@@ -118,8 +119,8 @@ print(' ')
 print('min: %f' % sub_rate_min)
 print('first quartile: %f' % sub_rate_q1)
 print('median: %f' % sub_rate_med)
+print('mean: %f' % sub_rate_mean)
 print('third quartile: %f' % sub_rate_q3)
 print('max: %f' % sub_rate_max)
 print(' ')
-
 
